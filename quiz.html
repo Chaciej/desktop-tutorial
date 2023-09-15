@@ -1,10 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport"
+	<meta charset="UTF-8"> <meta name="viewport"
 				content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Document</title>
 	<style>
 		html, body {
@@ -18,31 +16,61 @@
 			font-size: 32px;
 			padding: 10px;
 		}
-		section {
-			margin: auto;
-		}
+		section { margin: auto; }
 		h1 {
 			margin: 12px;
 			text-align: center;
 			font-size: 69px;
 		}
-		
+		#quiz { font-size: 3em; }
+		#answer {
+			margin-top: 50px;
+			color: #f6b43d;
+		}
+		.answer-item {
+			background-color: #444;
+			padding: 10px; margin: 5px;
+			display: inline-block;
+		}
+		#scoreDisplay { font-size: 69px; display: none }
 	</style>
 </head>
 <body>
 <section>
 	<div id="welcome">
 		<h1>Człajz</h1>
-		<button>Rozpocznij quiz</button>
+		<button id="startButton">Rozpocznij quiz</button>
 	</div>
-	
-	<div id="quiz"></div>
-	
+	<div style="display: none" id="quiz">
+		<div id="question"></div>
+		<div id="answer"></div>
+	</div>
+	<div id="scoreDisplay">Twoje punkty to: </div>
 </section>
 
 <script>
-	
+	startButton.onclick = ()=> {
+		welcome.style.display = 'none'; quiz.style.display = 'block'
+		renderQuestion()
+	}
+	function renderQuestion() {
+		question.innerText = questions[currentQuestion].q
+		answer.innerHTML = questions[currentQuestion].a.map((answer,i)=> `<div class="answer-item" onClick="answerQuestion(${i})">${i+1}) ${answer}</div>` ).join('<br>')
+	}
+	function answerQuestion(answerNumber) {
+		if (questions[currentQuestion].rightAnswer === answerNumber) score ++
+		currentQuestion ++; currentQuestion >= questions.length ? finish() : renderQuestion()
+	}
+	function finish() {
+		scoreDisplay.innerHTML += `<span style="color: orange">${score}</span>`
+		scoreDisplay.style.display = 'block'; quiz.style.display = 'none'
+	}
+	let currentQuestion = 0, score = 0
+	let questions = [
+		{ q: 'Dlaczego "gitownik" to fajna nazwa?', rightAnswer: 2, a: [ 'bo git jest git!', 'bo mój znajomy sobie wpisał', 'bo ziemnia jest płaska', ]},
+		{ q: 'Dlaczego piszę tę apkę', rightAnswer: 2, a: [ 'jaką apkę? to strona w HTMLu', 'bo jestem hackerem', 'nie piszę tylko walę w klawiaturę', ]},
+		{ q: 'Najlepsza gra n aświecie?', rightAnswer: 2, a: ['Starcraft', 'Warcraft', 'Obie!'],},
+	]
 </script>
-
 </body>
 </html>
